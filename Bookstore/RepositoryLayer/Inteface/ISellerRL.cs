@@ -5,9 +5,8 @@ using System.Text;
 
 namespace RepositoryLayer.Inteface
 {
-    public interface ICustomerRL
+    public interface ISellerRL
     {
-        bool RegisterCustomer(Customer customer);
-        LoginResponse Login(string email, string password);
+        bool RegisterSeller(Seller seller);
     }
 }

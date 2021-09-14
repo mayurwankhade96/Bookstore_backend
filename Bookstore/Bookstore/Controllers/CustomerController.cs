@@ -1,5 +1,5 @@
 ﻿using BusinessLayer.Inteface;
-using CommonLayer.Response;
+using CommonLayer.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -20,7 +20,7 @@ namespace Bookstore.Controllers
         }
 
         [HttpPost]
-        public ActionResult RegisterCustomer(AddCustomer customer)
+        public ActionResult RegisterCustomer(Customer customer)
         {
             try
             {
@@ -30,9 +30,28 @@ namespace Bookstore.Controllers
                 {
                     return Ok(new { success = true, message = "**Registered successfully**", customer.FullName, customer.Email  });
                 }
-                return BadRequest(new { success = false, message = "**Registration Failed**" });
+                return BadRequest(new { success = false, message = "Registration Failed! Please try again..." });
             }
             catch(Exception ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost("login")]
+        public ActionResult CustomerLogin(Login login)
+        {
+            try
+            {
+                var existingCustomer = _customerBL.Login(login.Email, login.Password);
+
+                if (existingCustomer != null)
+                {
+                    return Ok(new { success = true, message = "**Login successfull**", data = existingCustomer });
+                }
+                return BadRequest(new { success = false, message = "Login Failed! Please try again..." });
+            }
+            catch (Exception ex)
             {
                 return NotFound(new { success = false, message = ex.Message });
             }

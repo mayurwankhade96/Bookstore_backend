@@ -1,5 +1,4 @@
 ﻿using CommonLayer.Models;
-using CommonLayer.Response;
 using Microsoft.Extensions.Configuration;
 using RepositoryLayer.Inteface;
 using System;
@@ -19,19 +18,11 @@ namespace RepositoryLayer.Services
         }
 
         private const string _insertQuery = "spSignupCustomer";
-        public bool RegisterCustomer(AddCustomer customer)
+        public bool RegisterCustomer(Customer customer)
         {
             SqlConnection connection = new SqlConnection(_connectionString);
             try
-            {
-                Customer cust = new Customer()
-                {
-                    FullName = customer.FullName,
-                    Email = customer.Email,
-                    Password = customer.Password,
-                    MobileNumber = customer.MobileNumber
-                };
-                
+            {                
                 int rows;
                 using (connection)
                 {
@@ -45,6 +36,46 @@ namespace RepositoryLayer.Services
                     rows = command.ExecuteNonQuery();
                 }
                 return (rows > 0 ? true : false);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        private const string _selectQuery = "spCustomerLogin";
+        public LoginResponse Login(string email, string password)
+        {
+            SqlConnection connection = new SqlConnection(_connectionString);
+            try
+            {             
+                using (connection)
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand(_selectQuery, connection);
+                    command.CommandType = CommandType.StoredProcedure;         
+                    command.Parameters.AddWithValue("@email", email);
+                    command.Parameters.AddWithValue("@customer_password", password);
+                    
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        LoginResponse login = new LoginResponse();
+                        while (reader.Read())
+                        {
+                            login.Id = reader.GetInt32(0);
+                            login.FullName = reader.GetString(1);
+                            login.Email = reader.GetString(2);
+                            login.MobileNumber = reader.GetString(3);
+                        }
+                        return login;
+                    }
+                    return null;
+                }   
             }
             catch (Exception)
             {

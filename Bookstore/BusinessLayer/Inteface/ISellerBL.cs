@@ -5,9 +5,8 @@ using System.Text;
 
 namespace BusinessLayer.Inteface
 {
-    public interface ICustomerBL
+    public interface ISellerBL
     {
-        bool RegisterCustomer(Customer customer);
-        LoginResponse Login(string email, string password);
+        bool RegisterSeller(Seller seller);
     }
 }

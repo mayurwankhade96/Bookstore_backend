@@ -1,5 +1,5 @@
 ﻿using BusinessLayer.Inteface;
-using CommonLayer.Response;
+using CommonLayer.Models;
 using RepositoryLayer.Inteface;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,20 @@ namespace BusinessLayer.Services
         {
             this._customerRL = customerRL;
         }
-        public bool RegisterCustomer(AddCustomer customer)
+
+        public LoginResponse Login(string email, string password)
+        {
+            try
+            {
+                return this._customerRL.Login(email, password);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public bool RegisterCustomer(Customer customer)
         {
             try
             {

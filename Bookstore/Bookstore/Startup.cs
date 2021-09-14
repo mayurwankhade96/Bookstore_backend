@@ -34,6 +34,8 @@ namespace Bookstore
 
             services.AddTransient<ICustomerBL, CustomerBL>();
             services.AddTransient<ICustomerRL, CustomerRL>();
+            services.AddTransient<ISellerBL, SellerBL>();
+            services.AddTransient<ISellerRL, SellerRL>();
 
             // Register the swagger generator, This service is responsible for genrating Swagger Documents.
             services.AddSwaggerGen(c =>
@@ -68,7 +70,7 @@ namespace Bookstore
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Fundoo API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Bookstore V1");
 
                 // To serve SwaggerUI at application's root (http://localhost:<port>/) page, set the RoutePrefix property to an empty string.
                 c.RoutePrefix = string.Empty;
