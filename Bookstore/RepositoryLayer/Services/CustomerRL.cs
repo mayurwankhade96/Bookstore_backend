@@ -1,10 +1,13 @@
 ﻿using CommonLayer.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using RepositoryLayer.Inteface;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace RepositoryLayer.Services
@@ -12,9 +15,11 @@ namespace RepositoryLayer.Services
     public class CustomerRL : ICustomerRL
     {
         private readonly string _connectionString;
+        private readonly string _secret;
         public CustomerRL(IConfiguration config)
         {
             _connectionString = config.GetSection("ConnectionStrings").GetSection("Bookstore").Value;
+            _secret = config.GetSection("AppSettings").GetSection("Key").Value;
         }
 
         private const string _insertQuery = "spSignupCustomer";
@@ -71,7 +76,9 @@ namespace RepositoryLayer.Services
                             login.FullName = reader.GetString(1);
                             login.Email = reader.GetString(2);
                             login.MobileNumber = reader.GetString(3);
+                            login.Role = reader.GetString(4);
                         }
+                        login.Token = GenerateToken(email, login.Id, login.Role);
                         return login;
                     }
                     return null;
@@ -85,6 +92,26 @@ namespace RepositoryLayer.Services
             {
                 connection.Close();
             }
+        }
+
+        public string GenerateToken(string userEmail, int userId, string role)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Email, userEmail),
+                    new Claim("userId", userId.ToString(), ClaimValueTypes.Integer),
+                    new Claim(ClaimTypes.Role, role)
+                }),
+                Expires = DateTime.UtcNow.AddDays(2),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            string jwtToken = tokenHandler.WriteToken(token);
+            return jwtToken;
         }
     }
 }
