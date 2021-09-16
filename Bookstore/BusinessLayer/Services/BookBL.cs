@@ -7,19 +7,18 @@ using System.Text;
 
 namespace BusinessLayer.Services
 {
-    public class SellerBL : ISellerBL
+    public class BookBL : IBookBL
     {
-        private ISellerRL _sellerRL;
-        public SellerBL(ISellerRL _sellerRL)
+        private IBookRL _bookRL;
+        public BookBL(IBookRL bookRL)
         {
-            this._sellerRL = _sellerRL;
+            this._bookRL = bookRL;
         }
-
-        public LoginResponse Login(string email, string password)
+        public bool AddBook(Book book)
         {
             try
             {
-                return this._sellerRL.Login(email, password);
+                return this._bookRL.AddBook(book);
             }
             catch (Exception)
             {
@@ -27,11 +26,11 @@ namespace BusinessLayer.Services
             }
         }
 
-        public bool RegisterSeller(Seller seller)
+        public List<Book> GetBooks()
         {
             try
             {
-                return this._sellerRL.RegisterSeller(seller);
+                return this._bookRL.GetBooks();
             }
             catch (Exception)
             {

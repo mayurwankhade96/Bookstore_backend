@@ -5,9 +5,9 @@ using System.Text;
 
 namespace BusinessLayer.Inteface
 {
-    public interface ISellerBL
+    public interface IBookBL
     {
-        bool RegisterSeller(Seller seller);
-        LoginResponse Login(string email, string password);
+        bool AddBook(Book book);
+        List<Book> GetBooks();
     }
 }

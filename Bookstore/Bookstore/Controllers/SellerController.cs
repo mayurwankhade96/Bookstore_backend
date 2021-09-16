@@ -37,5 +37,24 @@ namespace Bookstore.Controllers
                 return NotFound(new { success = false, message = ex.Message });
             }
         }
+
+        [HttpPost("login")]
+        public ActionResult SellerLogin(Login login)
+        {
+            try
+            {
+                var existingSeller = _sellerBL.Login(login.Email, login.Password);
+
+                if (existingSeller != null)
+                {
+                    return Ok(new { success = true, message = "**Login successfull**", data = existingSeller });
+                }
+                return BadRequest(new { success = false, message = "Incorrect email or password! Please try again..." });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
     }
 }

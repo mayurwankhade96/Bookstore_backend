@@ -1,4 +1,5 @@
-﻿using CommonLayer.Models;
+﻿using CommonLayer;
+using CommonLayer.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RepositoryLayer.Inteface;
@@ -112,6 +113,35 @@ namespace RepositoryLayer.Services
             var token = tokenHandler.CreateToken(tokenDescriptor);
             string jwtToken = tokenHandler.WriteToken(token);
             return jwtToken;
+        }
+
+        private const string _updateQuery = "spResetPassword";
+        public bool ResetPassword(ResetPassword reset, int userId)
+        {
+            SqlConnection connection = new SqlConnection(_connectionString);
+            try
+            {
+                int rows;
+                using (connection)
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand(_updateQuery, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@customer_id", userId);
+                    command.Parameters.AddWithValue("@customer_password", reset.NewPassword);
+                    rows = command.ExecuteNonQuery();
+                }
+                return (rows > 0 ? true : false);
+            }
+            catch(Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
     }
 }
