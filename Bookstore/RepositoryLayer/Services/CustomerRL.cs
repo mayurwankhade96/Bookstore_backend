@@ -3,6 +3,7 @@ using CommonLayer.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RepositoryLayer.Inteface;
+using RepositoryLayer.MSMQService;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -136,6 +137,55 @@ namespace RepositoryLayer.Services
             catch(Exception)
             {
 
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        private const string _forgetPasswordQuery = "spForgetPassword";
+        public bool ForgetPassword(string email)
+        {
+            SqlConnection connection = new SqlConnection(_connectionString);
+            try
+            {
+                using (connection)
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand(_forgetPasswordQuery, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@email", email);
+
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        Customer customer = new Customer();
+                        while (reader.Read())
+                        {
+                            customer.CustomerId = reader.GetInt32(0);
+                            customer.FullName = reader.GetString(1);
+                            customer.Email = reader.GetString(2);
+                            customer.Password = reader.GetString(3);
+                            customer.MobileNumber = reader.GetString(4);
+                            customer.Role = reader.GetString(5);
+                        }
+                        if(customer != null)
+                        {
+                            string token = GenerateToken(customer.Email, customer.CustomerId, customer.Role);
+                            MSMQUtility mSMQ = new MSMQUtility();
+                            mSMQ.SendMessage(email, token);
+
+                            return true;
+                        }
+                        return false;
+                    }
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
                 throw;
             }
             finally

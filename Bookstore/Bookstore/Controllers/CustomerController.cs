@@ -86,5 +86,24 @@ namespace Bookstore.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        [HttpPost("forgetpassword")]
+        public ActionResult ForgetPassword([FromBody] ForgetPassword fogetPassword)
+        {
+            try
+            {
+                var passwordForgottenUser = _customerBL.ForgetPassword(fogetPassword.Email);
+
+                if(passwordForgottenUser == true)
+                {
+                    return Ok(new { message = "Link has been sent to given email id..." });
+                }
+                return BadRequest(new { success = false, message = "Invalid email address!" });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
     }
 }

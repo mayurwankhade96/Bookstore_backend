@@ -11,5 +11,6 @@ namespace RepositoryLayer.Inteface
         bool RegisterCustomer(Customer customer);
         LoginResponse Login(string email, string password);
         bool ResetPassword(ResetPassword reset, int userId);
+        bool ForgetPassword(string email);
     }
 }
