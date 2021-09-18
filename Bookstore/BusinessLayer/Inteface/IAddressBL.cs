@@ -1,4 +1,5 @@
-﻿using CommonLayer.Models;
+﻿using CommonLayer;
+using CommonLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,5 +10,6 @@ namespace BusinessLayer.Inteface
     {
         bool AddNewAddress(int userId, AddressModel address);
         List<AddressModel> GetAllAddress(int userId);
+        bool UpdateAddress(UpdateAddress update, int addressId, int customerId);
     }
 }

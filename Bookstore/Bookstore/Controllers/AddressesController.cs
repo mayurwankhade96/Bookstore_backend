@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Inteface;
+using CommonLayer;
 using CommonLayer.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -65,6 +66,27 @@ namespace Bookstore.Controllers
             catch (Exception ex)
             {
                 return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPut]
+        public ActionResult UpdateAddress(UpdateAddress update, int addressId)
+        {
+            try
+            {
+                int customerId = GetIdFromToken();
+
+                var noteToBeUpdated = _addressBL.UpdateAddress(update, addressId, customerId);
+
+                if (noteToBeUpdated == true)
+                {                   
+                    return Ok(new { message = "**Address Updated Successfully**", data = update });
+                }
+                return BadRequest(new { message = "operation unsuccessfull -_-" });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using CommonLayer.Models;
+﻿using CommonLayer;
+using CommonLayer.Models;
 using Microsoft.Extensions.Configuration;
 using RepositoryLayer.Inteface;
 using System;
@@ -71,6 +72,36 @@ namespace RepositoryLayer.Services
                     addresses.Add(address1);
                 }
                 return addresses;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public bool UpdateAddress(UpdateAddress update, int addressId, int customerId)
+        {
+            int rows;
+            SqlConnection connection = new SqlConnection(_connectionString);
+            try
+            {
+                using (connection)
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand("spUpdateAddress", connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@address", update.Address);
+                    command.Parameters.AddWithValue("@city", update.City);
+                    command.Parameters.AddWithValue("@state", update.State);
+                    command.Parameters.AddWithValue("@type_of", update.TypeOf);
+                    command.Parameters.AddWithValue("@address_id", addressId);
+                    rows = command.ExecuteNonQuery();
+                }
+                return (rows > 0 ? true : false);
             }
             catch (Exception)
             {

@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Inteface;
+using CommonLayer;
 using CommonLayer.Models;
 using RepositoryLayer.Inteface;
 using System;
@@ -20,6 +21,18 @@ namespace BusinessLayer.Services
             try
             {
                 return this._cartRL.AddToCart(cart, cutomerId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public bool DeleteFromCart(int cartId, int customerId)
+        {
+            try
+            {
+                return this._cartRL.DeleteFromCart(cartId, customerId);
             }
             catch (Exception)
             {

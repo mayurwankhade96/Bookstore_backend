@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Inteface;
+using CommonLayer;
 using CommonLayer.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -33,13 +34,34 @@ namespace Bookstore.Controllers
 
                 if (objectInCart == true)
                 {
-                    return Ok(new { success = true, message = "**Added to cart successfully**", data = cart });
+                    return Ok(new { success = true, message = "**Added to cart successfully**", data = cart.BookId, cart.CustomerId });
                 }
                 return BadRequest(new { success = false, message = "Something is wrong!" });
             }
             catch (Exception ex)
             {
                 return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpDelete]
+        public ActionResult DeleteNote(int cartId)
+        {
+            try
+            {
+                int customerId = Convert.ToInt32(User.FindFirst(x => x.Type == "userId").Value);
+
+                var bookToBeDeleted = _cartBL.DeleteFromCart(cartId, customerId);
+
+                if (bookToBeDeleted == true)
+                {
+                    return Ok(new { message = "**Book removed from cart**" });
+                }
+                return BadRequest(new { message = "operation unsuccessfull -_-" });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
             }
         }
     }

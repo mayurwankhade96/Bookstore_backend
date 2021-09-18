@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Inteface;
+using CommonLayer;
 using CommonLayer.Models;
 using RepositoryLayer.Inteface;
 using System;
@@ -32,6 +33,18 @@ namespace BusinessLayer.Services
             try
             {
                 return this._addressRL.GetAllAddress(userId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public bool UpdateAddress(UpdateAddress update, int addressId, int customerId)
+        {
+            try
+            {
+                return this._addressRL.UpdateAddress(update, addressId, customerId);
             }
             catch (Exception)
             {
