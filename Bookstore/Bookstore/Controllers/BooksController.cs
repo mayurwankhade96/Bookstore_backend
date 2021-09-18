@@ -20,7 +20,7 @@ namespace Bookstore.Controllers
         }
 
         [HttpPost]
-        public ActionResult RegisterCustomer(Book book)
+        public ActionResult AddBook(Book book)
         {
             try
             {
