@@ -72,6 +72,10 @@ namespace Bookstore
             services.AddTransient<IAddressRL, AddressRL>();
             services.AddTransient<ICartBL, CartBL>();
             services.AddTransient<ICartRL, CartRL>();
+            services.AddTransient<IWishlistBL, WishlistBL>();
+            services.AddTransient<IWishlistRL, WishlistRL>();
+            services.AddTransient<IOrderBL, OrderBL>();
+            services.AddTransient<IOrderRL, OrderRL>();
 
             // Register the swagger generator, This service is responsible for genrating Swagger Documents.
             services.AddSwaggerGen(c =>

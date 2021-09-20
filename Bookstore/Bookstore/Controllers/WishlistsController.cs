@@ -1,5 +1,4 @@
 ﻿using BusinessLayer.Inteface;
-using CommonLayer;
 using CommonLayer.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -15,26 +14,26 @@ namespace Bookstore.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "users")]
     [Route("api/[controller]")]
     [ApiController]
-    public class CartsController : ControllerBase
+    public class WishlistsController : ControllerBase
     {
-        private ICartBL _cartBL;
-        public CartsController(ICartBL cartBL)
+        private IWishlistBL _wishlistBL;
+        public WishlistsController(IWishlistBL wishlistBL)
         {
-            this._cartBL = cartBL;
+            this._wishlistBL = wishlistBL;
         }
 
         [HttpPost]
-        public ActionResult AddToCart(CartModel cart)
+        public ActionResult AddToWishlist(WishlistModel wishlist)
         {
             try
             {
                 int customerId = Convert.ToInt32(User.FindFirst(x => x.Type == "userId").Value);
 
-                var objectInCart = _cartBL.AddToCart(cart, customerId);
+                var objectInWishlist = _wishlistBL.AddToWishlist(wishlist, customerId);
 
-                if (objectInCart == true)
+                if (objectInWishlist == true)
                 {
-                    return Ok(new { success = true, message = "**Added to cart successfully**", data = cart.BookId, cart.CustomerId });
+                    return Ok(new { success = true, message = "**Added to wishlist successfully**", data = wishlist.BookId, wishlist.CustomerId });
                 }
                 return BadRequest(new { success = false, message = "Something is wrong!" });
             }
@@ -45,17 +44,17 @@ namespace Bookstore.Controllers
         }
 
         [HttpDelete]
-        public ActionResult DeleteFromCart(int cartId)
+        public ActionResult RemoveFromwishlist(int wishlistId)
         {
             try
             {
                 int customerId = Convert.ToInt32(User.FindFirst(x => x.Type == "userId").Value);
 
-                var bookToBeDeleted = _cartBL.DeleteFromCart(cartId, customerId);
+                var bookToBeRemoved = _wishlistBL.RemoveFromWishlist(wishlistId, customerId);
 
-                if (bookToBeDeleted == true)
+                if (bookToBeRemoved == true)
                 {
-                    return Ok(new { message = "**Book removed from cart**" });
+                    return Ok(new { message = "**Book removed from wishlist**" });
                 }
                 return BadRequest(new { message = "operation unsuccessfull -_-" });
             }
