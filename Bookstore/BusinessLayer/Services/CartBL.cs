@@ -16,7 +16,7 @@ namespace BusinessLayer.Services
             this._cartRL = cartRL;
         }
 
-        public bool AddToCart(CartModel cart, int cutomerId)
+        public object AddToCart(CartModel cart, int cutomerId)
         {
             try
             {
@@ -33,6 +33,18 @@ namespace BusinessLayer.Services
             try
             {
                 return this._cartRL.DeleteFromCart(cartId, customerId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public List<CartResponse> GetCartDetails(int customerId)
+        {
+            try
+            {
+                return this._cartRL.GetCartDetails(customerId);
             }
             catch (Exception)
             {

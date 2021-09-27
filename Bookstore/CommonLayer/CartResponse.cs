@@ -8,7 +8,6 @@ namespace CommonLayer
     {
         public int CartId { get; set; }
         public int BookId { get; set; }
-        public int Quantity { get; set; }
         public string BookTitle { get; set; }
         public string AuthorName { get; set; }
         public string Description { get; set; }

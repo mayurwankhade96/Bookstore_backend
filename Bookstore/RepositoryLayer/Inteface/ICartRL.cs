@@ -8,7 +8,8 @@ namespace RepositoryLayer.Inteface
 {
     public interface ICartRL
     {
-        bool AddToCart(CartModel cart, int cutomerId);
+        object AddToCart(CartModel cart, int cutomerId);
         bool DeleteFromCart(int cartId, int customerId);
+        List<CartResponse> GetCartDetails(int customerId);
     }
 }

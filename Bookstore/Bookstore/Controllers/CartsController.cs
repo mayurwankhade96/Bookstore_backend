@@ -32,9 +32,9 @@ namespace Bookstore.Controllers
 
                 var objectInCart = _cartBL.AddToCart(cart, customerId);
 
-                if (objectInCart == true)
+                if (objectInCart != null)
                 {
-                    return Ok(new { success = true, message = "**Added to cart successfully**", data = cart.BookId, cart.CustomerId });
+                    return Ok(new { success = true, message = "**Added to cart successfully**", cart.BookId, customerId });
                 }
                 return BadRequest(new { success = false, message = "Something is wrong!" });
             }
@@ -58,6 +58,26 @@ namespace Bookstore.Controllers
                     return Ok(new { message = "**Book removed from cart**" });
                 }
                 return BadRequest(new { message = "operation unsuccessfull -_-" });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+        [HttpGet]
+        public ActionResult GetCartDetails()
+        {
+            try
+            {
+                int customerId = Convert.ToInt32(User.FindFirst(x => x.Type == "userId").Value);
+
+                var booksFromCart = _cartBL.GetCartDetails(customerId);
+
+                if (booksFromCart != null)
+                {
+                    return Ok(new { message = "**Book are as follows**", data = booksFromCart });
+                }
+                return BadRequest(new { message = "there are no books in your cart..." });
             }
             catch (Exception ex)
             {
