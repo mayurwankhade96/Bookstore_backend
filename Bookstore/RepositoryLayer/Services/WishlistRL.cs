@@ -1,4 +1,5 @@
-﻿using CommonLayer.Models;
+﻿using CommonLayer;
+using CommonLayer.Models;
 using Microsoft.Extensions.Configuration;
 using RepositoryLayer.Inteface;
 using System;
@@ -59,6 +60,45 @@ namespace RepositoryLayer.Services
                     rows = command.ExecuteNonQuery();
                 }
                 return (rows > 0 ? true : false);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public List<WishlistResponse> GetWishlistDetails(int customerId)
+        {
+            List<WishlistResponse> booksInWishlist = new List<WishlistResponse>();
+            SqlConnection connection = new SqlConnection(_connectionString);
+            try
+            {
+                using (connection)
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand("spGetBooksFromWishlist", connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@customer_id", customerId);
+                    SqlDataReader dataReader = command.ExecuteReader();
+
+                    while (dataReader.Read())
+                    {
+                        WishlistResponse wishlist = new WishlistResponse();
+                        wishlist.BookId = Convert.ToInt32(dataReader["book_id"]);
+                        wishlist.WishlistId = Convert.ToInt32(dataReader["wishlist_id"]);
+                        wishlist.BookTitle = dataReader["book_title"].ToString();
+                        wishlist.AuthorName = dataReader["author_name"].ToString();
+                        wishlist.Description = dataReader["book_description"].ToString();
+                        wishlist.Price = Convert.ToInt32(dataReader["book_price"]);
+                        wishlist.BookImage = dataReader["book_image"].ToString();
+                        booksInWishlist.Add(wishlist);
+                    }
+                }
+                return booksInWishlist;
             }
             catch (Exception)
             {

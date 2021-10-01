@@ -1,4 +1,5 @@
-﻿using CommonLayer.Models;
+﻿using CommonLayer;
+using CommonLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,5 +10,6 @@ namespace RepositoryLayer.Inteface
     {
         bool AddToWishlist(WishlistModel wishlist, int cutomerId);
         bool RemoveFromWishlist(int wishlistId, int customerId);
+        List<WishlistResponse> GetWishlistDetails(int customerId);
     }
 }

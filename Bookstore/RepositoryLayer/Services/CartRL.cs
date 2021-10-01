@@ -90,6 +90,7 @@ namespace RepositoryLayer.Services
                         CartResponse cart = new CartResponse();
                         cart.BookId = Convert.ToInt32(dataReader["book_id"]);
                         cart.CartId = Convert.ToInt32(dataReader["cart_id"]);
+                        cart.CustomerId = Convert.ToInt32(dataReader["customer_id"]);
                         cart.BookTitle = dataReader["book_title"].ToString();
                         cart.AuthorName = dataReader["author_name"].ToString();
                         cart.Description = dataReader["book_description"].ToString();                       

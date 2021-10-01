@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace CommonLayer.Models
 {
     public class OrderModel
     {
-        public int OrderId { get; set; }
+        [Required]
         public int CartId { get; set; }
-        public int CustomerId { get; set; }
-        public int AddressId { get; set; }
-        public int BookId { get; set; }
-        public bool OrderPlaced { get; set; }
-        public DateTime OrderPlacedDate { get; set; }
     }
 }

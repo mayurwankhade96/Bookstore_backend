@@ -28,11 +28,23 @@ namespace BusinessLayer.Services
             }
         }
 
-        public bool PlaceOrder(OrderModel order, int customerId)
+        public List<OrderResponse> GetOrders(int customerId)
         {
             try
             {
-                return this._orderRL.PlaceOrder(order, customerId);
+                return this._orderRL.GetOrders(customerId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public bool PlaceOrder(int customerId, int cartId)
+        {
+            try
+            {
+                return this._orderRL.PlaceOrder(customerId, cartId);
             }
             catch (Exception)
             {

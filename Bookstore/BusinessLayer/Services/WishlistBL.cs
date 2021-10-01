@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Inteface;
+using CommonLayer;
 using CommonLayer.Models;
 using RepositoryLayer.Inteface;
 using System;
@@ -19,6 +20,18 @@ namespace BusinessLayer.Services
             try
             {
                 return this._wishlistRL.AddToWishlist(wishlist, cutomerId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public List<WishlistResponse> GetWishlistDetails(int customerId)
+        {
+            try
+            {
+                return this._wishlistRL.GetWishlistDetails(customerId);
             }
             catch (Exception)
             {

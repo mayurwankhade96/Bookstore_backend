@@ -56,7 +56,7 @@ namespace RepositoryLayer.Services
             return false;
         }
 
-        public bool PlaceOrder(OrderModel order, int customerId)
+        public bool PlaceOrder(int customerId, int cartId)
         {
             SqlConnection connection = new SqlConnection(_connectionString);
             try
@@ -67,11 +67,10 @@ namespace RepositoryLayer.Services
                     connection.Open();
                     SqlCommand command = new SqlCommand("spPlaceOrder", connection);
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@book_id", order.BookId);
-                    command.Parameters.AddWithValue("@cart_id", order.CartId);
                     command.Parameters.AddWithValue("@customer_id", customerId);
-                    command.Parameters.AddWithValue("@address_id", order.AddressId);
+                    command.Parameters.AddWithValue("@cart_id", cartId);
                     rows = command.ExecuteNonQuery();
+
                     //SqlDataReader reader = command.ExecuteReader();
                     //if (reader.HasRows)
                     //{
@@ -84,7 +83,7 @@ namespace RepositoryLayer.Services
                     //        orderDetails.CustomerId = reader.GetInt32(3);
                     //        orderDetails.BookId = reader.GetInt32(4);
                     //        orderDetails.OrderPlaced = reader.GetBoolean(5);
-                    //        orderDetails.OrderPlacedDate = reader.GetDateTime(6);                            
+                    //        orderDetails.OrderPlacedDate = reader.GetDateTime(6);
                     //    }
                     //    return orderDetails;
                     //}
@@ -141,6 +140,45 @@ namespace RepositoryLayer.Services
                     connection.Close();
                     return email;
                 }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public List<OrderResponse> GetOrders(int customerId)
+        {
+            List<OrderResponse> orderResponses = new List<OrderResponse>();
+            SqlConnection connection = new SqlConnection(_connectionString);
+            try
+            {
+                using (connection)
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand("spGetOrders", connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@customer_id", customerId);
+                    SqlDataReader dataReader = command.ExecuteReader();
+
+                    while (dataReader.Read())
+                    {
+                        OrderResponse orders = new OrderResponse();
+                        orders.OrderId = Convert.ToInt32(dataReader["order_id"]);
+                        orders.BookId = Convert.ToInt32(dataReader["book_id"]);
+                        orders.CartId = Convert.ToInt32(dataReader["cart_id"]);
+                        orders.CustomerId = Convert.ToInt32(dataReader["customer_id"]);
+                        orders.BookTitle = dataReader["book_title"].ToString();
+                        orders.AuthorName = dataReader["author_name"].ToString();
+                        orders.BookImage = dataReader["book_image"].ToString();                       
+                        orderResponses.Add(orders);
+                    }
+                }
+                return orderResponses;
             }
             catch (Exception)
             {

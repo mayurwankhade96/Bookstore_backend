@@ -63,5 +63,26 @@ namespace Bookstore.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
+
+        [HttpGet]
+        public ActionResult GetWishlistDetails()
+        {
+            try
+            {
+                int customerId = Convert.ToInt32(User.FindFirst(x => x.Type == "userId").Value);
+
+                var booksFromWishlist = _wishlistBL.GetWishlistDetails(customerId);
+
+                if (booksFromWishlist != null)
+                {
+                    return Ok(new { message = "**Books are as follows**", data = booksFromWishlist });
+                }
+                return BadRequest(new { message = "there are no books in your wishlist..." });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
     }
 }

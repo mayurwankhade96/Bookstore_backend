@@ -9,7 +9,7 @@ namespace RepositoryLayer.Inteface
     public interface IAddressRL
     {
         bool AddNewAddress(int userId, AddressModel address);
-        List<AddressModel> GetAllAddress(int userId);
+        List<AddressResponse> GetAllAddress(int userId);
         bool UpdateAddress(UpdateAddress update, int addressId, int customerId);
     }
 }

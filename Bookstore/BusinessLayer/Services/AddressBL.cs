@@ -28,7 +28,7 @@ namespace BusinessLayer.Services
             }
         }
 
-        public List<AddressModel> GetAllAddress(int userId)
+        public List<AddressResponse> GetAllAddress(int userId)
         {
             try
             {

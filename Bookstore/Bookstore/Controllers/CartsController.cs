@@ -64,6 +64,7 @@ namespace Bookstore.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
+
         [HttpGet]
         public ActionResult GetCartDetails()
         {
@@ -75,7 +76,7 @@ namespace Bookstore.Controllers
 
                 if (booksFromCart != null)
                 {
-                    return Ok(new { message = "**Book are as follows**", data = booksFromCart });
+                    return Ok(new { message = "**Books are as follows**", data = booksFromCart });
                 }
                 return BadRequest(new { message = "there are no books in your cart..." });
             }

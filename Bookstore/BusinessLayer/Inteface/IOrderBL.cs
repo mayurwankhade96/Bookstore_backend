@@ -8,7 +8,8 @@ namespace BusinessLayer.Inteface
 {
     public interface IOrderBL
     {
-        bool PlaceOrder(OrderModel order, int customerId);
+        bool PlaceOrder(int customerId, int cartId);       
         bool EmailOrderDetails(int customerId, int orderNumber);
+        List<OrderResponse> GetOrders(int customerId);
     }
 }

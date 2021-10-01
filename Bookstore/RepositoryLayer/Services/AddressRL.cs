@@ -50,9 +50,9 @@ namespace RepositoryLayer.Services
         }
 
         private const string _selectQuery = "spGetAddresses";
-        public List<AddressModel> GetAllAddress(int userId)
+        public List<AddressResponse> GetAllAddress(int userId)
         {
-            List<AddressModel> addresses = new List<AddressModel>();
+            List<AddressResponse> addresses = new List<AddressResponse>();
             SqlConnection connection = new SqlConnection(_connectionString);
             try
             {
@@ -61,15 +61,19 @@ namespace RepositoryLayer.Services
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@customer_id", userId);
                 SqlDataReader sqlreader = command.ExecuteReader();
+
                 while (sqlreader.Read())
                 {
-                    AddressModel address1 = new AddressModel();
-                    address1.AddressId = Convert.ToInt32(sqlreader["address_id"]);
-                    address1.Address = sqlreader["address"].ToString();
-                    address1.City = sqlreader["city"].ToString();
-                    address1.State = sqlreader["state"].ToString();
-                    address1.TypeOf = sqlreader["type_of"].ToString();
-                    addresses.Add(address1);
+                    AddressResponse addressResponse = new AddressResponse();
+                    addressResponse.AddressId = Convert.ToInt32(sqlreader["address_id"]);
+                    addressResponse.CustomerId = Convert.ToInt32(sqlreader["customer_id"]);
+                    addressResponse.FullName = sqlreader["full_name"].ToString();
+                    addressResponse.MobileNumber = sqlreader[("mobile_number")].ToString();
+                    addressResponse.Address = sqlreader["address"].ToString();
+                    addressResponse.City = sqlreader["city"].ToString();
+                    addressResponse.State = sqlreader["state"].ToString();
+                    addressResponse.TypeOf = sqlreader["type_of"].ToString();
+                    addresses.Add(addressResponse);
                 }
                 return addresses;
             }
